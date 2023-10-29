@@ -2,6 +2,7 @@
 SYMBOL_X = "X"
 SYMBOL_O = "O"
 SYMBOL_EMPTY = "_"
+current_symbol = SYMBOL_X
 
 
 def print_line():
@@ -44,7 +45,6 @@ def calc_quantity_of_win_situations(lst: list) -> dict:
 def analyze_field(field: list) -> str:
     STATE_IMPOSSIBLE = "Impossible"
     STATE_DRAW = "Draw"
-    STATE_GAME_NOT_FINISHED = "Game not finished"
     STATE_X_WINS = "X wins"
     STATE_O_WINS = "O wins"
 
@@ -96,8 +96,6 @@ def analyze_field(field: list) -> str:
         return STATE_X_WINS
     elif win_counter[SYMBOL_O]:
         return STATE_O_WINS
-    elif symbol_counter[SYMBOL_EMPTY]:
-        return STATE_GAME_NOT_FINISHED
     elif not symbol_counter[SYMBOL_EMPTY]:
         return STATE_DRAW
 
@@ -108,7 +106,7 @@ def check_user_input(user_input: list, game_field):
 
     try:
         user_coordinates = [int(user_string) for user_string in user_input]
-    except TypeError:
+    except ValueError:
         return "You should enter numbers!"
 
     for i in range(len(user_coordinates)):
@@ -120,16 +118,27 @@ def check_user_input(user_input: list, game_field):
 
 
 def change_game_field(user_input: list, game_field):
-    game_field[int(user_input[0]) - 1][int(user_input[1]) - 1] = SYMBOL_X
+    global current_symbol
+    game_field[int(user_input[0]) - 1][int(user_input[1]) - 1] = current_symbol
+    current_symbol = SYMBOL_X if current_symbol == SYMBOL_O else SYMBOL_O
 
 
-game_code = input()
+game_code = "_" * 9
 field = make_list_of_rows_from_str(game_code)
 print_field(field)
-# print(analyze_field(field))
+
 while True:
     user_move = input().split()
-    if check_user_input(user_move, field) is None:
+
+    user_input_check_result = check_user_input(user_move, field)
+    if user_input_check_result:
+        print(user_input_check_result)
+        continue
+
+    change_game_field(user_move, field)
+    print_field(field)
+
+    analyze_result = analyze_field(field)
+    if analyze_result:
+        print(analyze_result)
         break
-change_game_field(user_move, field)
-print_field(field)
