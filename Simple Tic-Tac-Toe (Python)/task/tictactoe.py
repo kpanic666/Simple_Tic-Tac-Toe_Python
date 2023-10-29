@@ -102,7 +102,34 @@ def analyze_field(field: list) -> str:
         return STATE_DRAW
 
 
+def check_user_input(user_input: list, game_field):
+    if len(user_input) != 2:
+        return "User entered wrong number of parameters!"
+
+    try:
+        user_coordinates = [int(user_string) for user_string in user_input]
+    except TypeError:
+        return "You should enter numbers!"
+
+    for i in range(len(user_coordinates)):
+        if not 0 < user_coordinates[i] < 4:
+            return "Coordinates should be from 1 to 3!"
+
+    if game_field[user_coordinates[0] - 1][user_coordinates[1] - 1] != SYMBOL_EMPTY:
+        return "This cell is occupied!"
+
+
+def change_game_field(user_input: list, game_field):
+    game_field[int(user_input[0]) - 1][int(user_input[1]) - 1] = SYMBOL_X
+
+
 game_code = input()
 field = make_list_of_rows_from_str(game_code)
 print_field(field)
-print(analyze_field(field))
+# print(analyze_field(field))
+while True:
+    user_move = input().split()
+    if check_user_input(user_move, field) is None:
+        break
+change_game_field(user_move, field)
+print_field(field)

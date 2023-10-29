@@ -268,5 +268,8 @@ files:
       if __name__ == '__main__':    TicTacToeTest().run_tests()
     learner_created: false
 feedback_link: https://hyperskill.org/learn/step/6506#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Sun, 29 Oct 2023 22:31:58 UTC"
 record: -1
